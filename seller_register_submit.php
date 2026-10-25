@@ -9,8 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $seller_name = $_POST['seller_name'];
     $seller_user_id = $_POST['seller_user_id'];
     $seller_email = $_POST['seller_email'];
-    $seller_password = $_POST['seller_password'];    
-   // $seller_password = password_hash($_POST['seller_password'], PASSWORD_DEFAULT);    
+    $seller_password = password_hash($_POST['seller_password'], PASSWORD_DEFAULT); // store a hash, never the plain password
     // Use prepared statements
     $stmt = $conn->prepare("INSERT INTO seller_data (seller_name, seller_user_id, seller_email, seller_password) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssss", $seller_name, $seller_user_id, $seller_email, $seller_password);

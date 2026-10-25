@@ -10,12 +10,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $buyer_user_id = $_POST['buyer_user_id_login'];
     $buyer_password = $_POST['buyer_password_login'];
     
-    // Use prepared statements
-    $sql = "select * from buyer_data where buyer_user_id = '$buyer_user_id' and buyer_password = '$buyer_password'";  
-    // echo($sql);
-    $result = mysqli_query($conn, $sql);  
-    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);  
-    $count = mysqli_num_rows($result);  
+    // Prepared statement prevents SQL injection; password_verify checks the stored hash.
+    $stmt = $conn->prepare("SELECT buyer_password FROM buyer_data WHERE buyer_user_id = ?");
+    $stmt->bind_param("s", $buyer_user_id);
+    $stmt->execute();
+    $row = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    $count = ($row && password_verify($buyer_password, $row['buyer_password'])) ? 1 : 0;
       
     if($count == 1){  
         $_SESSION['user_type'] = 'buyer';

@@ -14,7 +14,7 @@
 
     $sql = "CREATE TABLE seller_data(seller_id int(6) unsigned auto_increment primary key,
 seller_name varchar(30) not null, 
-seller_user_id varchar(20) not null, seller_email varchar(30) not null, seller_password varchar(30) not null);";
+seller_user_id varchar(20) not null, seller_email varchar(30) not null, seller_password varchar(255) not null);";
 
     if ($conn->query($sql) === TRUE) {
         echo "Table users created";

@@ -14,7 +14,7 @@
 
     $sql = "CREATE TABLE buyer_data(buyer_id int(6) unsigned auto_increment primary key,
 buyer_name varchar(30) not null, 
-buyer_user_id varchar(20) not null, buyer_email varchar(30) not null, buyer_password varchar(30) not null);";
+buyer_user_id varchar(20) not null, buyer_email varchar(30) not null, buyer_password varchar(255) not null);";
 
     if ($conn->query($sql) === TRUE) {
         echo "Table buyer created";
