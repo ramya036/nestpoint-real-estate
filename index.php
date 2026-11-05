@@ -11,7 +11,7 @@
 
     <div class="header">
         <div class="logo">
-            <img src="./img/logo.png" alt="HomeQuest Logo">
+            <img src="./logo.png" alt="Nest Point logo">
         </div>
         <div class="menu">
             <ul>

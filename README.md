@@ -7,6 +7,17 @@ A PHP + MySQL web app where **sellers list homes**, **buyers search them** and *
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 ![CI](https://github.com/ramya036/nestpoint-real-estate/actions/workflows/ci.yml/badge.svg)
 
+![Buyer dashboard with listing photos, one card flipped to show its details](docs/buyer-dashboard.png)
+
+## Features
+
+- **Three roles** with separate registration, login and dashboards
+- **Sellers** add listings with a name, address, age, bedrooms, bathrooms, garden, parking, price and a photo, and can delete them
+- **Buyers** search listings by address, bedrooms, garden, parking or price
+- **Admins** see every listing on the platform
+
+## How it works
+
 ```
             ┌──────────── index.php ────────────┐
             │                                   │
@@ -17,14 +28,9 @@ A PHP + MySQL web app where **sellers list homes**, **buyers search them** and *
             └── config.php (env-based DB settings, role checks) ── MySQL
 ```
 
-## Features
+Every page loads `config.php`, which reads the database settings from environment variables and provides `require_role()`. Protected pages call it first, so a signed-out visitor or the wrong role is sent to the right login page.
 
-- **Three roles** with separate registration, login and dashboards
-- **Sellers** add listings with a name, address, age, bedrooms, bathrooms, garden, parking, price and a photo, and can delete them
-- **Buyers** search listings by address, bedrooms, garden, parking or price
-- **Admins** see every listing on the platform
-
-## Security
+**Security**
 
 - Passwords stored as **bcrypt hashes** (`password_hash` / `password_verify`)
 - **Prepared statements** for every query that takes user input, so SQL injection doesn't work
@@ -79,6 +85,7 @@ GitHub Actions runs PHP lint and this test against MySQL on every push.
 | `buyer_dashboard.php`, `seller_dashboard.php`, `admin_dashboard.php` | Role dashboards |
 | `form.php`, `insert_card.php`, `delete_card.php` | Add and remove listings |
 | `tests/smoke.sh` | End-to-end test |
+| `docs/` | Screenshots |
 
 ## Team
 
