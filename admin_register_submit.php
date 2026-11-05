@@ -1,5 +1,6 @@
 <?php
-$conn = new mysqli("localhost", "nguttula1", "nguttula1", "nguttula1");
+require_once __DIR__ . '/config.php';
+$conn = db_mysqli();
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);

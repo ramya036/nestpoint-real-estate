@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/config.php'; require_role('seller'); ?>
 <?php
 session_start();
 $user_type = $_SESSION['user_type'] ?? 'seller'; // Set to 'guest' if not logged in
@@ -145,6 +146,9 @@ $user_type = $_SESSION['user_type'] ?? 'seller'; // Set to 'guest' if not logged
     <div class="c">
         <h1>Add Your Property</h1>
         <form method="post" action="insert_card.php" enctype="multipart/form-data">
+            <label for="name">Listing name</label>
+            <input type="text" id="name" name="name" maxlength="100" placeholder="e.g. Sunny 3-bed near Midtown">
+
             <label for="address">Address of the Property?</label>
             <input type="text" id="address" name="address" maxlength="255">
 

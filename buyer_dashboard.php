@@ -1,6 +1,7 @@
 <?php
-session_start();
-$user_type = $_SESSION['user_type'] ?? 'buyer'; // Set to 'guest' if not logged in
+require_once __DIR__ . '/config.php';
+require_role('buyer', 'admin');
+$user_type = $_SESSION['user_type'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -214,7 +215,8 @@ $user_type = $_SESSION['user_type'] ?? 'buyer'; // Set to 'guest' if not logged 
     <div class="buyer_dashboard">
         <?php
         // connect to the database
-        $pdo = new PDO('mysql:host=localhost;dbname=nguttula1', 'nguttula1', 'nguttula1');
+        require_once __DIR__ . '/config.php';
+        $pdo = db_pdo();
 
         // Check if a search query was submitted
         $search_query = isset($_GET['search']) ? $_GET['search'] : '';
@@ -239,7 +241,7 @@ $user_type = $_SESSION['user_type'] ?? 'buyer'; // Set to 'guest' if not logged 
             echo '<img src="' . $image_path . '" alt="Property Image">';
             echo '</div>';
             echo '<div class="flip-card-back">';
-            echo '<h2><b>Apartment: </b>' . htmlspecialchars($row['name']) . '</h2>';
+            echo '<h2><b>Apartment: </b>' . htmlspecialchars($row['name'] ?: 'Home listing') . '</h2>';
             echo '<p><b>Address: </b>' . htmlspecialchars($row['address']) . '</p>';
             echo '<p><b>Age: </b>' . htmlspecialchars($row['age']) . '</p>';
             echo '<p><b>No. of Beds: </b>' . htmlspecialchars($row['bed']) . '</p>';

@@ -11,40 +11,41 @@
 <body>
     <?php
 
+require_once __DIR__ . '/config.php';
+require_role('seller');
 require("db.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-  // Get form data
-  $address = $_POST['address'];
-  $age = $_POST['age'];
-  $bed = $_POST['bed'];
-  $ad = $_POST['ad'];
-  $garden = $_POST['garden'];
-  $pa = $_POST['pa'];
-  $tax = $_POST['tax'];
+  // Form data (cast numbers so bad input can't break the query)
+  $name    = trim($_POST['name'] ?? '');
+  $address = trim($_POST['address'] ?? '');
+  $age     = (int)($_POST['age'] ?? 0);
+  $bed     = (int)($_POST['bed'] ?? 0);
+  $ad      = (int)($_POST['ad'] ?? 0);
+  $garden  = trim($_POST['garden'] ?? '');
+  $pa      = trim($_POST['pa'] ?? '');
+  $tax     = (int)($_POST['tax'] ?? 0);
 
-  // Get file data
-  $file_name = $_FILES['file']['name'];
-  $file_tmp = $_FILES['file']['tmp_name'];
+  // Only accept real images up to 5 MB, saved under a random name
+  $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+  $file = $_FILES['file'] ?? null;
+  $type = ($file && $file['error'] === UPLOAD_ERR_OK) ? mime_content_type($file['tmp_name']) : null;
 
-  // Create a new unique file name
-  // $file_new_name = uniqid() . '-' . $file_name;
-
-  // Set upload directory
-  $upload_dir = 'img/';
-
-  // Move file to upload directory
-  move_uploaded_file($file_tmp, $upload_dir . $file_name);
-
-  // Insert data into database
-  $sql = "INSERT INTO card (address, age, bed, ad, garden, pa, tax, image)
-          VALUES ('$address', '$age', '$bed', '$ad', '$garden', '$pa', '$tax', '$file_name')";
-
-  if ($conn->query($sql) === TRUE) {
-    echo "<script>New record created successfully</script>";
+  if (!$type || !isset($allowed[$type]) || $file['size'] > 5 * 1024 * 1024) {
+    echo "<p>Please upload a JPG, PNG or WEBP image under 5 MB.</p>";
   } else {
-    echo "<script>'Error: ' . $sql . '<br>' . $conn->error</script>";
+    $file_name = bin2hex(random_bytes(8)) . '.' . $allowed[$type];
+    move_uploaded_file($file['tmp_name'], __DIR__ . '/img/' . $file_name);
+
+    $stmt = $conn->prepare(
+      "INSERT INTO card (name, address, age, bed, ad, garden, pa, tax, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    );
+    $stmt->bind_param("ssiiissis", $name, $address, $age, $bed, $ad, $garden, $pa, $tax, $file_name);
+    $stmt->execute();
+    $stmt->close();
+    header("Location: seller_dashboard.php");
+    exit;
   }
 
   $conn->close();

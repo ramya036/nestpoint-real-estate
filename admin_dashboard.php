@@ -1,13 +1,6 @@
 <?php
-require("db.php");
-
-// Need seller to access dashboard
-session_start();
-
-$username = $_SESSION['seller_user_id'];
-
-// Query properties of the current logged-in seller
-$sql = "SELECT * FROM cards WHERE seller='$username'";
+require_once __DIR__ . '/config.php';
+require_role('admin');
 ?>
 
 <!DOCTYPE html>
@@ -177,7 +170,8 @@ $sql = "SELECT * FROM cards WHERE seller='$username'";
     <div class="card-container">
         <?php
         // connect to the database
-        $pdo = new PDO('mysql:host=localhost;dbname=nguttula1', 'nguttula1', 'nguttula1');
+        require_once __DIR__ . '/config.php';
+        $pdo = db_pdo();
 
         // query to retrieve the data from the database
         $sql = "SELECT * FROM card";
@@ -193,7 +187,7 @@ $sql = "SELECT * FROM cards WHERE seller='$username'";
             echo '<img src="' . $image_path . '" alt="Property Image">';
             echo '</div>';
             echo '<div class="flip-card-back">';
-            echo '<h2><b>Apartment: </b>' . htmlspecialchars($row['name']) . '</h2>';
+            echo '<h2><b>Apartment: </b>' . htmlspecialchars($row['name'] ?: 'Home listing') . '</h2>';
             echo '<p><b>Address: </b>' . htmlspecialchars($row['address']) . '</p>';
             echo '<p><b>Age: </b>' . htmlspecialchars($row['age']) . '</p>';
             echo '<p><b>No. of Beds: </b>' . htmlspecialchars($row['bed']) . '</p>';

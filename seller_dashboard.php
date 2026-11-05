@@ -1,6 +1,7 @@
 <?php
-session_start();
-$user_type = $_SESSION['user_type'] ?? 'seller'; // Set to 'guest' if not logged in
+require_once __DIR__ . '/config.php';
+require_role('seller', 'admin');
+$user_type = $_SESSION['user_type'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -208,7 +209,8 @@ $user_type = $_SESSION['user_type'] ?? 'seller'; // Set to 'guest' if not logged
         <?php
         // connect to the database
         try {
-          $pdo = new PDO('mysql:host=localhost;dbname=nguttula1', 'nguttula1', 'nguttula1');
+          require_once __DIR__ . '/config.php';
+        $pdo = db_pdo();
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // query to retrieve the data from the database
@@ -225,7 +227,7 @@ $user_type = $_SESSION['user_type'] ?? 'seller'; // Set to 'guest' if not logged
                 echo '<img src="' . $image_path . '" alt="Property Image">';
                 echo '</div>';
                 echo '<div class="flip-card-back">';
-                echo '<h2>' . htmlspecialchars($row['name']) . '</h2>';
+                echo '<h2>' . htmlspecialchars($row['name'] ?: 'Home listing') . '</h2>';
                 echo '<p>ID: ' . htmlspecialchars($row['id']) . '</p>';
                 echo '<p>Address: ' . htmlspecialchars($row['address']) . '</p>';
                 echo '<p>Age: ' . htmlspecialchars($row['age']) . ' years</p>';

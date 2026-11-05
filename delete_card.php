@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/config.php'; require_role('seller', 'admin'); ?>
 <?php
 session_start();
 $user_type = $_SESSION['user_type'] ?? 'seller'; // Set to 'guest' if not logged in
@@ -185,7 +186,8 @@ $user_type = $_SESSION['user_type'] ?? 'seller'; // Set to 'guest' if not logged
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $card_id = $_POST['card_id'];
 
-    $conn = new mysqli("localhost", "nguttula1", "nguttula1", "nguttula1");
+    require_once __DIR__ . '/config.php';
+$conn = db_mysqli();
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);

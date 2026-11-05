@@ -1,0 +1,34 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: nestpoint
+          MYSQL_USER: nestpoint
+          MYSQL_PASSWORD: nestpoint
+          MYSQL_ROOT_PASSWORD: root
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost" --health-interval=5s --health-retries=20
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_NAME: nestpoint
+      DB_USER: nestpoint
+      DB_PASS: nestpoint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mysqli, pdo_mysql
+      - name: Lint PHP
+        run: for f in $(git ls-files '*.php'); do php -l "$f" || exit 1; done
+      - name: Load schema
+        run: mysql -h 127.0.0.1 -u nestpoint -pnestpoint nestpoint < schema.sql
+      - name: End-to-end smoke test
+        run: bash tests/smoke.sh

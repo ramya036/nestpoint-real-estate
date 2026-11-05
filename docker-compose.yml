@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: nestpoint
+      MYSQL_USER: nestpoint
+      MYSQL_PASSWORD: ${DB_PASS:-nestpoint}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-rootpass}
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 20
+  web:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_NAME: nestpoint
+      DB_USER: nestpoint
+      DB_PASS: ${DB_PASS:-nestpoint}
+    ports:
+      - "8080:80"
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  db-data:
