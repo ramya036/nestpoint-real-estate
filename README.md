@@ -33,7 +33,7 @@ A PHP + MySQL web app where **sellers list homes**, **buyers browse and save the
 1. Install [XAMPP](https://www.apachefriends.org/) (Apache + PHP + MySQL) and clone this repo into `htdocs/`.
 2. Create a MySQL database and user, then update the connection details in `db.php` and the `*_submit.php` files.
 3. Open `create_users_table.php`, `create_buyer.php` and `create_card.php` once in the browser to create the tables.
-4. Visit `http://localhost/Nest-Point/`.
+4. Visit `http://localhost/nestpoint-real-estate/`.
 
 ## Team
 
